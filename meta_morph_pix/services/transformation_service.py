@@ -11,7 +11,7 @@ async def transform_image(image):
         return decrease_quality(img, 80)
 
 
-def resize_image(image, width=1280, height=1024):
+def resize_image(image, width=1800, height=1200):
     """
     Resize an image to the specified width and height.
 
