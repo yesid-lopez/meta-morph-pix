@@ -6,12 +6,25 @@ from PIL import Image, ExifTags
 async def transform_image(image):
     image_content = await image.read()
     with Image.open(io.BytesIO(image_content)) as img:
-        buffer = io.BytesIO()
         img = correct_image_orientation(img)
-        # dir = "/Users/yelopez/git/yesid/meta-morph-pix/assets"
-        # img.save(f"{dir}/transformed.JPG", "JPEG", quality=20)
-        img.save(buffer, "JPEG", quality=20)
-        buffer.seek(0)
+        img = resize_image(img)
+        return decrease_quality(img, 80)
+
+
+def resize_image(image, width=1280, height=1024):
+    """
+    Resize an image to the specified width and height.
+
+    Parameters:
+    - image: Image object.
+    - width: New width.
+    - height: New height.
+
+    Returns:
+    - img: Resized image object.
+    """
+    image.thumbnail((width, height))
+    return image
 
 
 def correct_image_orientation(image):
@@ -53,3 +66,22 @@ def correct_image_orientation(image):
                 image = image.rotate(90, expand=True)
 
     return image
+
+
+def decrease_quality(image, quality=100):
+    """
+    Decrease the quality of an image.
+
+    Parameters:
+    - image: Image object.
+    - quality: New quality.
+
+    Returns:
+    - img: Image object with decreased quality.
+    """
+    buffer = io.BytesIO()
+    # path = "/Users/yelopez/git/yesid/meta-morph-pix/assets"
+    # image.save(f"{path}/transformed.jpg", "JPEG", quality=quality, optimize=True)
+    image.save(buffer, "JPEG", quality=quality)
+    buffer.seek(0)
+    return buffer

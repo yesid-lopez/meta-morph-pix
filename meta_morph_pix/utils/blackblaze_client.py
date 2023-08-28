@@ -1,6 +1,5 @@
-import os
-
 from b2sdk.v2 import InMemoryAccountInfo, B2Api
+
 from meta_morph_pix.config import backblaze
 
 
