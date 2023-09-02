@@ -3,7 +3,6 @@ name = "meta-morph-pix"
 version = "0.1.0"
 description = ""
 authors = ["Yesid Lopez <<yesid.leonardo.lopez@hotmail.com>>"]
-readme = "README.md"
 packages = [{include = "meta_morph_pix"}]
 
 [tool.poetry.dependencies]

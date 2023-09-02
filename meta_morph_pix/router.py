@@ -1,3 +1,5 @@
+import os
+
 import uvicorn
 from fastapi import FastAPI, UploadFile
 
@@ -25,4 +27,5 @@ async def transform_image(folder_name: str, files: list[UploadFile]):
 
 
 def run():
-    uvicorn.run("meta_morph_pix.router:app", reload=True)
+    host = os.getenv("HOST")
+    uvicorn.run("meta_morph_pix.router:app", host=host, reload=True)
