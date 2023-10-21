@@ -2,11 +2,24 @@ import os
 
 import uvicorn
 from fastapi import FastAPI, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 
 from meta_morph_pix.services import transformation_service, storage_service
 from meta_morph_pix.utils.blackblaze_client import get_b2_client
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
@@ -19,7 +32,7 @@ async def healthcheck():
 
 
 @app.post("/transform_images")
-async def transform_image(folder_name: str, files: list[UploadFile]):
+async def transform_images(folder_name: str, files: list[UploadFile]):
     messages = []
     for file in files:
         transformed_image = await transformation_service.transform_image(file)
@@ -28,6 +41,18 @@ async def transform_image(folder_name: str, files: list[UploadFile]):
             messages.append(f"Image {filename} uploaded successfully")
         except FileExistsError as error:
             messages.append(f"{str(error)}")
+    return {"data": messages}
+
+
+@app.post("/transform_image")
+async def transform_image(folder_name: str, file: UploadFile):
+    messages = []
+    transformed_image = await transformation_service.transform_image(file)
+    try:
+        filename = storage_service.upload_image(transformed_image, f"{folder_name}/{file.filename}")
+        messages.append(f"Image {filename} uploaded successfully")
+    except FileExistsError as error:
+        messages.append(f"{str(error)}")
     return {"data": messages}
 
 
