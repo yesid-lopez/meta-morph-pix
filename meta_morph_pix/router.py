@@ -10,7 +10,7 @@ from meta_morph_pix.utils.blackblaze_client import get_b2_client
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000"
+    "*"
 ]
 
 app.add_middleware(
@@ -57,5 +57,6 @@ async def transform_image(folder_name: str, file: UploadFile):
 
 
 def run():
+    port = os.getenv("PORT", "85")
     host = os.getenv("HOST", "127.0.0.1")
-    uvicorn.run("meta_morph_pix.router:app", host=host, reload=True)
+    uvicorn.run("meta_morph_pix.router:app", port=int(port), host=host, reload=True)
